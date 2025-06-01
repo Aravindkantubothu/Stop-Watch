@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch & Clock</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 320px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    #clock {
+      font-size: 28px;
+      margin-bottom: 30px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    #time {
+      font-size: 50px;
+      margin-bottom: 30px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 0;
+      margin: 0 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .start { background-color: #38a169; color: white; }
+    .stop  { background-color: #e53e3e; color: white; }
+    .reset { background-color: #718096; color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Live Clock</h1>
+    <div id="clock">--:--:--</div>
+
+    <h1>Stopwatch</h1>
+    <div id="time">00:00:00</div>
+    <div class="buttons">
+      <button class="btn start" onclick="startStopwatch()">Start</button>
+      <button class="btn stop" onclick="stopStopwatch()">Stop</button>
+      <button class="btn reset" onclick="resetStopwatch()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock(); // run immediately on load
+
+    // Stopwatch
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+    let interval = null;
+    let isRunning = false;
+
+    function updateStopwatch() {
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+      }
+      if (minutes === 60) {
+        minutes = 0;
+        hours++;
+      }
+
+      const format = n => n.toString().padStart(2, '0');
+      document.getElementById('time').textContent =
+        `${format(hours)}:${format(minutes)}:${format(seconds)}`;
+    }
+
+    function startStopwatch() {
+      if (!isRunning) {
+        interval = setInterval(updateStopwatch, 1000);
+        isRunning = true;
+      }
+    }
+
+    function stopStopwatch() {
+      clearInterval(interval);
+      isRunning = false;
+    }
+
+    function resetStopwatch() {
+      clearInterval(interval);
+      seconds = 0;
+      minutes = 0;
+      hours = 0;
+      isRunning = false;
+      document.getElementById('time').textContent = "00:00:00";
+    }
+  </script>
+
+</body>
+</html>
